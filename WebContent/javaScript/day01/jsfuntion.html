@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript">
+/*유효범위
+전역변수와 지역변수: 함수 바깥에서 선언된 변수-전체지역에서 사용가능 
+함수 안에서 선언된 변수는 함수안에서만 영향을 준다.
+ */
+var i = 5;
+
+function a(){
+	var i = 10;
+	b();
+}
+function b(){
+	document.write(i);
+}
+
+a(); // 5   전역변수이기 때문에
+
+</script>
+</body>
+</html>
