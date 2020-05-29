@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+body {
+	font-size: 9pt;
+	font-family: "굴림";
+}
+
+div, p, ul, li {
+	
+}
+
+ul.menu {
+	padding: 10px;
+	list-style: none;
+	border: 1px #000 solid;
+}
+
+ul.menu li {
+	border: 1px #eeeeee solid;
+	margin: 10px;
+}
+
+li.select {
+	background-color: #ccc;
+}
+</style>
+</head>
+<body>
+<div class="container">
+	<div class="tab tab-2">
+		<input type="text" name="menu" id="menu">
+		<button onclick="add_menu();">추가</button>
+		<button onclick="alter_menu();">수정</button>
+		<button onclick="remove_menu();">삭제</button>
+		<button onclick="upNdown('up');">up</button>
+		<button onclick="upNdown('down');">down</button>
+	</div>
+</div>
+<br>
+<div class="tab tab-1">
+	<table id="table" border="1" style="cursor: pointer">
+		<tr>
+			<th> menu</th> 
+		</tr>
+	</table>
+</div>
+<script>
+		var rIndex, table = document.getElementById("table"); // html의 아이디가 table인 태그를 rIndex, table 넣어준다.
+
+		function checkEmptyInput() { // input 값이 empty인지 확인
+			var isEmpty = false, // input 값이 empty이면 false
+			menu = document.getElementById("menu").value; //html의 아이디가 menu인 태그의 값을 menu에 넣어준다
+
+			if (menu === "") {
+				alert("Menu Empty"); //input값이 비어 있으면 alert로 "Menu Empty"가 뜨게 한다.
+				isEmpty = true;
+			}
+			return isEmpty;
+		}
+
+		function add_menu() { // 메뉴 추가
+
+			if (!checkEmptyInput()) { //input 값이 empty인지 확인한다
+				var newRow = table.insertRow(table.length), //새로운 행을 만들어 추가한다.
+				cell1 = newRow.insertCell(0), menu = document
+						.getElementById("menu").value; //input 값을 메뉴에 담는다.
+
+				cell1.innerHTML = menu; //menu를 html에 뿌려준다.
+
+				selectedRowToInput(); //행이 추가 될때 함수를 설정해준다.
+			}
+		}
+
+		function selectedRowToInput() { //input text에 입력한 값을 테이블에서 선택하면 보여준다.
+
+			for (var i = 1; i < table.rows.length; i++) {
+				table.rows[i].onclick = function() {
+					rIndex = this.rowIndex; // 선택된 행의 인덱스를 가져온다
+					document.getElementById("menu").value = this.cells[0].innerHTML;
+
+				};
+			}
+		}
+		selectedRowToInput();
+
+		function alter_menu() { //수정
+			var menu = document.getElementById("menu").value;
+			if (!checkEmptyInput()) {
+				table.rows[rIndex].cells[0].innerHTML = menu;
+
+			}
+		}
+
+		function remove_menu() { //삭제
+			table.deleteRow(rIndex);
+			document.getElementById("menu").value = ""; //  input text값을 삭제 한다.
+
+		}
+
+		var index = 0; // 선택된 행 인덱스를 설정하는 변수
+		function getSelectedRow() {
+			var table = document.getElementById("table");
+			for (var i = 1; i < table.rows.length; i++) {
+				table.rows[i].onclick = function() {
+					if (typeof index !== "undefined") { // 이전에 선택한 행에서 선택한 항목을 지운다
+						table.rows[index].classList.toggle("selected");
+					}
+					index = this.rowIndex;
+					this.classList.toggle("selected");
+
+				};
+			}
+		}
+
+		getSelectedRow();
+
+		function upNdown(direction) {
+			var rows = document.getElementById("table").rows, parent = rows[rIndex].parentNode;
+			if (direction === "up") {
+				if (rIndex > 1) { //index값이 1보다 클 때 실행
+					parent.insertBefore(rows[rIndex], rows[rIndex - 1]);// up을 누르면 선택한 인덱스 값은 -1이 된다.
+					rIndex--; //인덱스 값을 -1을 해준다
+				}
+			}
+
+			if (direction === "down") {
+				if (rIndex < rows.length - 1) { //선택한 인덱스 값이 전체 row보다 작으면 down을 실행
+					parent.insertBefore(rows[rIndex + 1], rows[rIndex]); //down을 누르면 선택한 인덱스 값은 +1이 된다.
+					rIndex++; //인덱스 값을  +1을 해준다.
+				}
+			}
+		}
+</script>
+</body>
+</html>
